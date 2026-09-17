@@ -1,4 +1,8 @@
+"""Define products and their inventory behavior."""
+
+
 class Product:
+    """Represent a product that can be purchased from inventory."""
 
     def __init__(
             self,
@@ -6,6 +10,7 @@ class Product:
             price: float = 0.0,
             quantity: int = 0
         ) -> None:
+        """Initialize a product with a name, price, and quantity."""
         self.name: str = name
         self.price: float = price
         self.quantity: int = quantity
@@ -13,14 +18,12 @@ class Product:
 
 
     def get_quantity(self) -> int:
-        """
-        Getter function for quantity. Returns the quantity (int).
-        """
+        """Return the product quantity."""
         return self.quantity
 
     def set_quantity(self, quantity: int) -> None:
-        """
-        Setter function for quantity.
+        """Set the product quantity.
+
         If quantity reaches 0, deactivates the product.
         """
         self.quantity = quantity
@@ -28,27 +31,25 @@ class Product:
             self.deactivate()
 
     def is_active(self) -> bool:
-        """
-        Getter function for active.
-        Returns True if the product is active, otherwise False.
-        """
+        """Return whether the product is active."""
         return self.active
 
     def activate(self) -> None:
-        """ Activates the product. """
+        """Activate the product."""
         self.active = True
 
     def deactivate(self) -> None:
-        """ Deactivates the product. """
+        """Deactivate the product."""
         self.active = False
 
     def show(self) -> None:
-        """Prints a string that represents the product. """
+        """Print a string that represents the product."""
         print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
 
     def buy(self, quantity: int) -> float:
-        """
-        * Buys a given quantity of the product.
+        """Buy a given quantity of the product.
+
+        * Return the total price of the purchase.
         * Returns the total price (float) of the purchase.
         * Updates the quantity of the product.
         * Raises an exception if amount bought would exceed
