@@ -146,6 +146,12 @@ def make_order() -> None:
 
 def start() -> None:
     """Run the interactive Best Buy main menu."""
+    menu = {
+                "1": list_products,
+                "2": show_total_quantity,
+                "3": make_order,
+            }
+
     while True:
         print("\n" + YELLOW + "=" * 40)
         print(BLUE + "              BEST BUY")
@@ -161,15 +167,11 @@ def start() -> None:
         selection = validate_input()
         print("-" * 30)
 
-        if selection == "1":
-            list_products()
-        elif selection == "2":
-            show_total_quantity()
-        elif selection == "3":
-            make_order()
-        elif selection == "4":
+        if selection == "4":
             print("Goodbye!")
             break
+
+        menu[selection]()
 
 
 def main() -> None:
