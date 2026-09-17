@@ -15,7 +15,8 @@ class Store:
 
     def remove_products(self, product: Product) -> None:
         """Remove a product from the store."""
-        self.products.remove(product)
+        if product in self.products:
+            self.products.remove(product)
 
     def get_total_quantity(self) -> int:
         """Return how many items are in the store in total."""
