@@ -14,7 +14,7 @@ class Store:
         self.products.append(product)
 
     def remove_products(self, product: Product) -> None:
-        """Remove a product from store."""
+        """Remove a product from the store."""
         self.products.remove(product)
 
     def get_total_quantity(self) -> int:
@@ -25,7 +25,10 @@ class Store:
         """Return all products in the store that are active."""
         return [product for product in self.products if product.is_active()]
 
-    def order(self, shopping_list: list[tuple[Product, int]]) -> float:
+    def order(# pylint: disable=no-self-use
+            self,
+            shopping_list: list[tuple[Product, int]]
+        ) -> float:
         """Process a list of product and quantity tuples.
 
         Each tuple contains a Product object and a quantity.
