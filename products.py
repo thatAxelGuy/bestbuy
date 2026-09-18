@@ -5,17 +5,27 @@ class Product:
     """Represent a product that can be purchased from inventory."""
 
     def __init__(
-            self,
-            name: str = "Product Name",
-            price: float = 0.0,
-            quantity: int = 0
-        ) -> None:
-        """Initialize a product with a name, price, and quantity."""
+        self, name: str = "Product Name", price: float = 0.0, quantity: int = 0
+    ) -> None:
+        """Initialize a product with a name, price, and quantity.
+
+        Raises
+        ------
+            ValueError
+            If price or quantity is negative, or name is empty.
+
+        """
+        if not name:
+            raise ValueError("Product name cannot be empty.")
+        if price < 0:
+            raise ValueError("Price cannot be negative.")
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative.")
+
         self.name: str = name
         self.price: float = price
         self._quantity: int = quantity
         self._active: bool = True
-
 
     def get_quantity(self) -> int:
         """Return the product quantity."""
@@ -26,6 +36,9 @@ class Product:
 
         If quantity reaches 0, deactivates the product.
         """
+        if quantity < 0:
+            raise ValueError("Quantity can't be negative")
+
         self._quantity = quantity
         if self._quantity == 0:
             self.deactivate()
