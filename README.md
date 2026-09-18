@@ -17,6 +17,10 @@ The application allows users to:
 ├── main.py
 ├── products.py
 ├── store.py
+├── requirements.txt
+├── tests/
+│   ├── test_products.py
+│   └── test_store.py
 └── README.md
 ```
 
@@ -38,10 +42,20 @@ Contains the `Store` class, which manages the store's products and orders.
 
 Contains the command-line user interface, including the store inventory, menu, product listing, and ordering process.
 
+### `tests/`
+
+Contains unit tests for `Product` and `Store`, covering validation, purchasing, and order handling (including edge cases like ordering more stock than is available).
+
 ## Requirements
 
 * Python 3.10+
-* No external dependencies
+* `pytest` (only needed to run the test suite — see [Testing](#testing))
+
+Install with:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## How to Run
 
@@ -67,6 +81,28 @@ The application will display the main menu:
 ```
 
 Follow the prompts to interact with the store.
+
+## Testing
+
+Unit tests are written with `pytest` and live in the `tests/` directory.
+
+Run the full suite from the project root:
+
+```bash
+python3 -m pytest
+```
+
+Run a single test file:
+
+```bash
+python3 -m pytest tests/test_store.py
+```
+
+Run a single test:
+
+```bash
+python3 -m pytest tests/test_store.py::test_order_rejects_repeated_product_exceeding_stock
+```
 
 ## Example Inventory
 
