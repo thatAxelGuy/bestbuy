@@ -30,9 +30,19 @@ class Store:
     def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Process a list of product and quantity tuples.
 
-        Each tuple contains a Product object and a quantity.
         Buy the products and return the total price of the order.
+        Raises ValueError before any purchase is made if any item
+        in the list cannot be fulfilled.
         """
+        reserved: dict[Product, int] = {}
+        for product, quantity in shopping_list:
+            if not product.is_active():
+                raise ValueError(f"{product.name} is inactive.")
+
+            reserved[product] = reserved.get(product, 0) + quantity
+            if reserved[product] > product.get_quantity():
+                raise ValueError(f"Not enough stock of {product.name}.")
+
         total_price = 0.0
 
         for product, quantity in shopping_list:
