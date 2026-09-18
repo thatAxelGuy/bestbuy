@@ -54,11 +54,8 @@ def show_total_quantity(store: Store) -> None:
     """Display the total quantity of products currently in the store."""
     print(f"Total amount of items in store: {store.get_total_quantity()}")
 
-
-def make_order(store: Store) -> None:
-    """Collect an order interactively and display its summary."""
-    basket: dict[Product, int] = dict()
-
+def _select_product(store: Store, basket: dict[Product, int]) -> Product | None:
+    """Prompt for and return a valid product, or None if the user leaves."""
     while True:
         print("\nAvailable items")
         print("-" * 6)
@@ -69,7 +66,7 @@ def make_order(store: Store) -> None:
         selection = input("Select a product #: \n")
 
         if selection.lower() == "leave":
-            return
+            return None
 
         if not selection.isdigit():
             print("Please enter a valid product number.")
@@ -81,7 +78,18 @@ def make_order(store: Store) -> None:
             print("Please select a product from the list.")
             continue
 
-        product = products[product_number - 1]
+        return products[product_number - 1]
+
+
+def make_order(store: Store) -> None:
+    """Collect an order interactively and display its summary."""
+    basket: dict[Product, int] = dict()
+
+    while True:
+        product = _select_product(store, basket)
+
+        if product is None:
+            return
         available_stock = product.get_quantity() - basket.get(product, 0)
 
         if available_stock == 0:
@@ -120,8 +128,8 @@ def make_order(store: Store) -> None:
 
     try:
         total = store.order(list(basket.items()))
-    except ValueError as e:
-        print(f"Order failed: {e}")
+    except ValueError as error:
+        print(f"Order failed: {error}")
         return
 
     print("\n" + "=" * 40)
