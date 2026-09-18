@@ -3,15 +3,6 @@
 from products import Product
 from store import Store
 
-# setup initial stock of inventory
-product_list = [
-    Product("MacBook Air M2", price=1450, quantity=100),
-    Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    Product("Google Pixel 7", price=500, quantity=250),
-]
-
-best_buy = Store(product_list)
-
 
 def validate_input() -> str:
     """Prompt until the user enters a valid main-menu selection."""
@@ -24,11 +15,13 @@ def validate_input() -> str:
     return selection
 
 
-def list_products(basket=None) -> list[Product]:
+def list_products(store: Store, basket=None) -> list[Product]:
     """Display and return products with stock available for purchase.
 
     Parameters
     ----------
+    store : Store
+        Store reference
     basket : dict, optional
         Products and quantities already selected for the current order.
 
@@ -38,7 +31,7 @@ def list_products(basket=None) -> list[Product]:
         Products with remaining available stock.
 
     """
-    products: list[Product] = best_buy.get_all_products()
+    products: list[Product] = store.get_all_products()
     available_products = []
 
     for product in products:
@@ -57,19 +50,19 @@ def list_products(basket=None) -> list[Product]:
     return available_products
 
 
-def show_total_quantity() -> None:
+def show_total_quantity(store: Store) -> None:
     """Display the total quantity of products currently in the store."""
-    print(f"Total amount of items in store: {best_buy.get_total_quantity()}")
+    print(f"Total amount of items in store: {store.get_total_quantity()}")
 
 
-def make_order() -> None:
+def make_order(store: Store) -> None:
     """Collect an order interactively and display its summary."""
     basket: dict[Product, int] = dict()
 
     while True:
         print("\nAvailable items")
         print("-" * 6)
-        products = list_products(basket)
+        products = list_products(store, basket)
         print("-" * 6)
         print("Type 'leave' if you want to cancel the order.")
 
@@ -126,7 +119,7 @@ def make_order() -> None:
             break
 
     try:
-        total = best_buy.order(list(basket.items()))
+        total = store.order(list(basket.items()))
     except ValueError as e:
         print(f"Order failed: {e}")
         return
@@ -145,7 +138,7 @@ def make_order() -> None:
     print("=" * 40)
 
 
-def start() -> None:
+def start(store: Store) -> None:
     """Run the interactive Best Buy main menu."""
     menu = {
         "1": list_products,
@@ -172,12 +165,20 @@ def start() -> None:
             print("Goodbye!")
             break
 
-        menu[selection]()
+        menu[selection](store)
 
 
 def main() -> None:
     """Start the Best Buy command-line application."""
-    start()
+    # setup initial stock of inventory
+    product_list = [
+        Product("MacBook Air M2", price=1450, quantity=100),
+        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        Product("Google Pixel 7", price=500, quantity=250),
+        ]
+
+    best_buy = Store(product_list)
+    start(best_buy)
 
 
 if __name__ == "__main__":
