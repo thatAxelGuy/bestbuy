@@ -15,14 +15,17 @@ def validate_input() -> str:
     return selection
 
 
-def list_products(store: Store, basket=None) -> list[Product]:
+def list_products(
+        store: Store,
+        basket: dict[Product,int] | None = None
+        ) -> list[Product]:
     """Display and return products with stock available for purchase.
 
     Parameters
     ----------
     store : Store
         Store reference
-    basket : dict, optional
+    basket : dict[Product,int] | None, optional
         Products and quantities already selected for the current order.
 
     Returns
@@ -54,6 +57,7 @@ def show_total_quantity(store: Store) -> None:
     """Display the total quantity of products currently in the store."""
     print(f"Total amount of items in store: {store.get_total_quantity()}")
 
+
 def _select_product(store: Store, basket: dict[Product, int]) -> Product | None:
     """Prompt for and return a valid product, or None if the user leaves."""
     while True:
@@ -81,9 +85,30 @@ def _select_product(store: Store, basket: dict[Product, int]) -> Product | None:
         return products[product_number - 1]
 
 
+def _select_quantity(available_stock: int) -> int:
+    """Prompt for and return a valid order quantity, bounded by available_stock."""
+    while True:
+        quantity = input("How many would you like to order?: ")
+        if not quantity.isdigit():
+            print("Please enter a valid quantity.")
+            continue
+
+        if quantity == "0":
+            print("Please enter a value > 0.")
+            continue
+
+        quantity = int(quantity)
+
+        if quantity > available_stock:
+            print(f"Sorry, only {available_stock} are available.")
+            continue
+
+        return quantity
+
+
 def make_order(store: Store) -> None:
     """Collect an order interactively and display its summary."""
-    basket: dict[Product, int] = dict()
+    basket: dict[Product, int] = {}
 
     while True:
         product = _select_product(store, basket)
@@ -101,23 +126,7 @@ def make_order(store: Store) -> None:
 
         print(f"{product.name} selected! Amount remaining: {available_stock}")
 
-        while True:
-            quantity = input("How many would you like to order?: ")
-            if not quantity.isdigit():
-                print("Please enter a valid quantity.")
-                continue
-
-            if quantity == "0":
-                print("Please enter a value > 0.")
-                continue
-
-            quantity = int(quantity)
-
-            if quantity > available_stock:
-                print(f"Sorry, only {available_stock} are available.")
-                continue
-
-            break
+        quantity = _select_quantity(available_stock)
 
         basket[product] = basket.get(product, 0) + quantity
 
@@ -132,6 +141,11 @@ def make_order(store: Store) -> None:
         print(f"Order failed: {error}")
         return
 
+    _print_order_summary(basket, total)
+
+
+def _print_order_summary(basket: dict[Product, int], total: float) -> None:
+    """Print summary of the order to screen."""
     print("\n" + "=" * 40)
     print("           ORDER SUMMARY")
     print("=" * 40)
