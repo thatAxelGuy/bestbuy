@@ -13,38 +13,38 @@ class Product:
         """Initialize a product with a name, price, and quantity."""
         self.name: str = name
         self.price: float = price
-        self.quantity: int = quantity
-        self.active: bool = True
+        self._quantity: int = quantity
+        self._active: bool = True
 
 
     def get_quantity(self) -> int:
         """Return the product quantity."""
-        return self.quantity
+        return self._quantity
 
     def set_quantity(self, quantity: int) -> None:
         """Set the product quantity.
 
         If quantity reaches 0, deactivates the product.
         """
-        self.quantity = quantity
-        if self.quantity == 0:
+        self._quantity = quantity
+        if self._quantity == 0:
             self.deactivate()
 
     def is_active(self) -> bool:
         """Return whether the product is active."""
-        return self.active
+        return self._active
 
     def activate(self) -> None:
         """Activate the product."""
-        self.active = True
+        self._active = True
 
     def deactivate(self) -> None:
         """Deactivate the product."""
-        self.active = False
+        self._active = False
 
     def show(self) -> None:
         """Print a string that represents the product."""
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        print(f"{self.name}, Price: {self.price}, Quantity: {self.get_quantity()}")
 
     def buy(self, quantity: int) -> float:
         """Buy a given quantity of the product.
@@ -61,5 +61,5 @@ class Product:
         if quantity > self.get_quantity():
             raise Exception("Not enough quantity available.")
 
-        self.set_quantity(self.quantity - quantity)
+        self.set_quantity(self.get_quantity() - quantity)
         return self.price * quantity

@@ -3,10 +3,6 @@
 from products import Product
 from store import Store
 
-BLUE = "\033[94m"
-YELLOW = "\033[93m"
-RESET = "\033[0m"
-
 # setup initial stock of inventory
 product_list = [
     Product("MacBook Air M2", price=1450, quantity=100),
@@ -46,7 +42,7 @@ def list_products(basket=None) -> list[Product]:
     available_products = []
 
     for product in products:
-        available_stock = product.quantity
+        available_stock = product.get_quantity()
         if basket is not None:
             for basket_product, basket_quantity in basket:
                 if basket_product == product:
@@ -55,7 +51,9 @@ def list_products(basket=None) -> list[Product]:
         if available_stock > 0:
             available_products.append(product)
             print(
-                f"{len(available_products)}. {product.name} Quantity: {available_stock}"
+                f"{len(available_products)}. "
+                f"{product.name} "
+                f"Quantity: {available_stock}"
             )
 
     return available_products
@@ -93,7 +91,7 @@ def make_order() -> None:
             continue
 
         product = products[product_number - 1]
-        available_stock = product.quantity
+        available_stock = product.get_quantity()
         for basket_product, basket_quantity in basket:
             if basket_product == product:
                 available_stock -= basket_quantity
@@ -153,16 +151,16 @@ def start() -> None:
             }
 
     while True:
-        print("\n" + YELLOW + "=" * 40)
-        print(BLUE + "              BEST BUY")
-        print(YELLOW + "=" * 40 + RESET)
+        print("\n" + "=" * 40)
+        print("              BEST BUY")
+        print("=" * 40 )
 
-        print(BLUE + "1. List all products in store")
+        print("1. List all products in store")
         print("2. Show total amount in store")
         print("3. Make an order")
-        print("4. Quit" + RESET)
+        print("4. Quit")
 
-        print(YELLOW + "-" * 40 + RESET)
+        print("-" * 40)
 
         selection = validate_input()
         print("-" * 30)
