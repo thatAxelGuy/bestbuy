@@ -26,10 +26,8 @@ class Store:
         """Return all products in the store that are active."""
         return [product for product in self.products if product.is_active()]
 
-    def order(# pylint: disable=no-self-use
-            self,
-            shopping_list: list[tuple[Product, int]]
-        ) -> float:
+    @staticmethod
+    def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Process a list of product and quantity tuples.
 
         Each tuple contains a Product object and a quantity.

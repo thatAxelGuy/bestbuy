@@ -44,9 +44,7 @@ def list_products(basket=None) -> list[Product]:
     for product in products:
         available_stock = product.get_quantity()
         if basket is not None:
-            for basket_product, basket_quantity in basket:
-                if basket_product == product:
-                    available_stock -= basket_quantity
+            available_stock -= basket.get(product, 0)
 
         if available_stock > 0:
             available_products.append(product)
@@ -66,7 +64,7 @@ def show_total_quantity() -> None:
 
 def make_order() -> None:
     """Collect an order interactively and display its summary."""
-    basket = []
+    basket: dict[Product, int] = dict()
 
     while True:
         print("\nAvailable items")
@@ -91,10 +89,7 @@ def make_order() -> None:
             continue
 
         product = products[product_number - 1]
-        available_stock = product.get_quantity()
-        for basket_product, basket_quantity in basket:
-            if basket_product == product:
-                available_stock -= basket_quantity
+        available_stock = product.get_quantity() - basket.get(product, 0)
 
         if available_stock == 0:
             print(
@@ -111,6 +106,10 @@ def make_order() -> None:
                 print("Please enter a valid quantity.")
                 continue
 
+            if quantity == "0":
+                print("Please enter a value > 0.")
+                continue
+
             quantity = int(quantity)
 
             if quantity > available_stock:
@@ -119,20 +118,20 @@ def make_order() -> None:
 
             break
 
-        basket.append((product, quantity))
+        basket[product] = basket.get(product, 0) + quantity
 
         continue_order = input("Would you like to add another product? (y/n): ")
 
         if continue_order.lower() == "n":
             break
 
-    total = best_buy.order(basket)
+    total = best_buy.order(list(basket.items()))
 
     print("\n" + "=" * 40)
     print("           ORDER SUMMARY")
     print("=" * 40)
 
-    for index, (product, quantity) in enumerate(basket, start=1):
+    for index, (product, quantity) in enumerate(basket.items(), start=1):
         item_total = product.price * quantity
         print(f"\n{index}. {product.name}")
         print(f"   ${product.price:,.2f} × {quantity} = ${item_total:,.2f}")
@@ -145,10 +144,10 @@ def make_order() -> None:
 def start() -> None:
     """Run the interactive Best Buy main menu."""
     menu = {
-                "1": list_products,
-                "2": show_total_quantity,
-                "3": make_order,
-            }
+        "1": list_products,
+        "2": show_total_quantity,
+        "3": make_order,
+        }
 
     while True:
         print("\n" + "=" * 40)
