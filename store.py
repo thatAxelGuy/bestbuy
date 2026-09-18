@@ -9,11 +9,11 @@ class Store:
         """Initialize the store with a list of products."""
         self.products: list[Product] = products
 
-    def add_products(self, product: Product) -> None:
+    def add_product(self, product: Product) -> None:
         """Add a product to the store."""
         self.products.append(product)
 
-    def remove_products(self, product: Product) -> None:
+    def remove_product(self, product: Product) -> None:
         """Remove a product from the store."""
         if product in self.products:
             self.products.remove(product)

@@ -49,17 +49,16 @@ class Product:
     def buy(self, quantity: int) -> float:
         """Buy a given quantity of the product.
 
-        * Return the total price of the purchase.
         * Returns the total price (float) of the purchase.
         * Updates the quantity of the product.
         * Raises an exception if amount bought would exceed
           available quantity or product is inactive.
         """
         if not self.is_active():
-            raise Exception("Product is inactive.")
+            raise ValueError("Product is inactive.")
 
         if quantity > self.get_quantity():
-            raise Exception("Not enough quantity available.")
+            raise ValueError("Not enough quantity available.")
 
         self.set_quantity(self.get_quantity() - quantity)
         return self.price * quantity

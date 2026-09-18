@@ -29,7 +29,7 @@ def list_products(basket=None) -> list[Product]:
 
     Parameters
     ----------
-    basket : list, optional
+    basket : dict, optional
         Products and quantities already selected for the current order.
 
     Returns
@@ -125,7 +125,11 @@ def make_order() -> None:
         if continue_order.lower() == "n":
             break
 
-    total = best_buy.order(list(basket.items()))
+    try:
+        total = best_buy.order(list(basket.items()))
+    except ValueError as e:
+        print(f"Order failed: {e}")
+        return
 
     print("\n" + "=" * 40)
     print("           ORDER SUMMARY")
